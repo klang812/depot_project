@@ -10,4 +10,19 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+
+  if ENV["SLOW"].present?
+    require "selenium-webdriver"
+    module ::Selenium::WebDriver::Remote
+      class Bridge
+        alias old_execute execute
+  
+        def execute(*args)
+          sleep(1)
+          old_execute(*args)
+        end
+      end
+    end
+  end
+
 end
